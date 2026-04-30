@@ -31,16 +31,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(DeviceToken::class);
     }
 
-    public function sentFriendships(): HasMany
-    {
-        return $this->hasMany(Friendship::class, 'requester_id');
-    }
-
-    public function receivedFriendships(): HasMany
-    {
-        return $this->hasMany(Friendship::class, 'addressee_id');
-    }
-
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() !== 'admin') {

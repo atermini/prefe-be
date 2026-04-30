@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\Questions\Schemas;
 
 use App\Models\Question;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class QuestionInfolist

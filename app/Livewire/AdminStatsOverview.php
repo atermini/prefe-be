@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Answer;
-use App\Models\Friendship;
 use App\Models\Question;
 use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget;
@@ -21,12 +20,6 @@ class AdminStatsOverview extends StatsOverviewWidget
 
         $todayAnswers = $todayQuestion?->answers()->count() ?? 0;
         $sharedAnswers = Answer::query()->where('is_shared', true)->count();
-        $acceptedFriendships = Friendship::query()
-            ->where('status', Friendship::STATUS_ACCEPTED)
-            ->count();
-        $pendingFriendships = Friendship::query()
-            ->where('status', Friendship::STATUS_PENDING)
-            ->count();
 
         return [
             Stat::make('Utenti', (string) User::query()->count())
@@ -38,13 +31,9 @@ class AdminStatsOverview extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-chat-bubble-left-right')
                 ->color($todayQuestion ? 'success' : 'warning'),
             Stat::make('Risposte condivise', (string) $sharedAnswers)
-                ->description('Visibili nel feed amici')
+                ->description('Visibili nel feed')
                 ->descriptionIcon('heroicon-m-share')
                 ->color('info'),
-            Stat::make('Amicizie accettate', (string) $acceptedFriendships)
-                ->description("Richieste pendenti: {$pendingFriendships}")
-                ->descriptionIcon('heroicon-m-heart')
-                ->color($pendingFriendships > 0 ? 'warning' : 'success'),
         ];
     }
 }
