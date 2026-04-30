@@ -10,7 +10,6 @@ uses(RefreshDatabase::class);
 test('a user can fetch todays question before answering', function () {
     $user = User::factory()->create();
     $question = Question::factory()->create([
-        'prompt' => 'Mare o montagna?',
         'option_a' => 'Mare',
         'option_b' => 'Montagna',
         'active_on' => today()->toDateString(),
@@ -21,6 +20,7 @@ test('a user can fetch todays question before answering', function () {
     $this->getJson('/api/questions/today')
         ->assertSuccessful()
         ->assertJsonPath('data.id', $question->id)
+        ->assertJsonPath('data.prompt', 'Preferiresti...')
         ->assertJsonPath('data.has_answered', false)
         ->assertJsonPath('data.results', null);
 });

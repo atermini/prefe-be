@@ -18,10 +18,16 @@ class AnswersTable
     {
         return $table
             ->columns([
-                TextColumn::make('question.prompt')
+                TextColumn::make('question_full_text')
                     ->label('Domanda')
+                    ->state(fn ($record) => $record->question?->fullText())
                     ->limit(50)
-                    ->searchable(),
+                    ->searchable(query: function ($query, string $search) {
+                        return $query
+                            ->whereHas('question', fn ($query) => $query
+                                ->where('option_a', 'like', "%{$search}%")
+                                ->orWhere('option_b', 'like', "%{$search}%"));
+                    }),
                 TextColumn::make('user.name')
                     ->searchable(),
                 TextColumn::make('selected_option')

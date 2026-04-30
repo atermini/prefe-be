@@ -18,7 +18,6 @@ class QuestionFactory extends Factory
     public function definition(): array
     {
         return [
-            'prompt' => fake()->sentence(8),
             'option_a' => fake()->sentence(3),
             'option_b' => fake()->sentence(3),
             'active_on' => fake()->unique()->dateTimeBetween('-1 month', '+1 month')->format('Y-m-d'),

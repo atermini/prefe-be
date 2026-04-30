@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Answers\Schemas;
 
+use App\Models\Question;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -17,7 +18,13 @@ class AnswerForm
                 Section::make('Risposta')
                     ->schema([
                         Select::make('question_id')
-                            ->relationship('question', 'prompt')
+                            ->options(fn () => Question::query()
+                                ->orderByDesc('active_on')
+                                ->get()
+                                ->mapWithKeys(fn (Question $question) => [
+                                    $question->id => $question->fullText(),
+                                ])
+                                ->all())
                             ->searchable()
                             ->preload()
                             ->required(),

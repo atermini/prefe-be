@@ -26,7 +26,7 @@ class FeedAnswerResource extends JsonResource
             'user' => UserResource::make($this->user),
             'question' => [
                 'id' => $this->question?->id,
-                'prompt' => $this->question?->prompt,
+                'prompt' => $this->question ? $this->question::introText() : null,
                 'active_on' => $this->question?->active_on?->toDateString(),
             ],
         ];

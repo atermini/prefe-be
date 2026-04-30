@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\Questions\Schemas;
 
+use App\Models\Question;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
@@ -16,10 +17,9 @@ class QuestionForm
             ->components([
                 Section::make('Domanda del giorno')
                     ->schema([
-                        Textarea::make('prompt')
-                            ->label('Testo della domanda')
-                            ->required()
-                            ->rows(4)
+                        Placeholder::make('intro')
+                            ->label('Incipit fisso')
+                            ->content(Question::introText())
                             ->columnSpanFull(),
                         TextInput::make('option_a')
                             ->label('Risposta A')

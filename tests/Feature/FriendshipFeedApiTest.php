@@ -18,7 +18,6 @@ test('accepted friends can see shared answers in their feed', function () {
         'email' => 'giulia@example.com',
     ]);
     $question = Question::factory()->create([
-        'prompt' => 'Pizza o sushi?',
         'option_a' => 'Pizza',
         'option_b' => 'Sushi',
         'active_on' => today()->toDateString(),
@@ -53,5 +52,5 @@ test('accepted friends can see shared answers in their feed', function () {
         ->assertJsonCount(1, 'data')
         ->assertJsonPath('data.0.user.name', 'Giulia')
         ->assertJsonPath('data.0.selected_option', 'B')
-        ->assertJsonPath('data.0.question.prompt', 'Pizza o sushi?');
+        ->assertJsonPath('data.0.question.prompt', 'Preferiresti...');
 });

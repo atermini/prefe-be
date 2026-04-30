@@ -19,10 +19,10 @@ class QuestionsTable
     {
         return $table
             ->columns([
-                TextColumn::make('prompt')
+                TextColumn::make('full_question')
                     ->label('Domanda')
-                    ->limit(60)
-                    ->searchable(),
+                    ->state(fn ($record) => $record->fullText())
+                    ->limit(80),
                 TextColumn::make('option_a')
                     ->searchable(),
                 TextColumn::make('option_b')

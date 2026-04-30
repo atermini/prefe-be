@@ -14,8 +14,9 @@ class AnswerInfolist
             ->components([
                 TextEntry::make('question.id')
                     ->label('ID domanda'),
-                TextEntry::make('question.prompt')
-                    ->label('Domanda'),
+                TextEntry::make('question_full_text')
+                    ->label('Domanda')
+                    ->state(fn ($record) => $record->question?->fullText()),
                 TextEntry::make('user.name')
                     ->label('Utente'),
                 TextEntry::make('selected_option')

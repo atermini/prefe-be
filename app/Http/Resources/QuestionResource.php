@@ -23,7 +23,7 @@ class QuestionResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'prompt' => $this->prompt,
+            'prompt' => Question::introText(),
             'active_on' => $this->active_on?->toDateString(),
             'options' => [
                 ['key' => 'A', 'label' => $this->option_a],

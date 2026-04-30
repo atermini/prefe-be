@@ -33,7 +33,7 @@ class AdminStatsOverview extends StatsOverviewWidget
                 ->description('Account registrati')
                 ->descriptionIcon('heroicon-m-users')
                 ->color('primary'),
-            Stat::make('Domanda di oggi', $todayQuestion?->prompt ?? 'Non programmata')
+            Stat::make('Domanda di oggi', $todayQuestion?->fullText() ?? 'Non programmata')
                 ->description("Risposte oggi: {$todayAnswers}")
                 ->descriptionIcon('heroicon-m-chat-bubble-left-right')
                 ->color($todayQuestion ? 'success' : 'warning'),
