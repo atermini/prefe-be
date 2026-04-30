@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Pages;
 
+use App\Models\InviteCode;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
@@ -21,20 +23,48 @@ class Register extends Component
 
     public string $password_confirmation = '';
 
+    #[Validate('required|string')]
+    public string $inviteCode = '';
+
     public function register(): void
     {
         $this->validate();
 
-        $user = User::create([
-            'name' => $this->name,
-            'password' => Hash::make($this->password),
-        ]);
+        $invite = InviteCode::query()
+            ->where('code', strtoupper(trim($this->inviteCode)))
+            ->available()
+            ->first();
 
-        event(new Registered($user));
+        if (! $invite) {
+            $this->addError('inviteCode', 'Codice invito non valido o esaurito.');
 
-        Auth::login($user);
+            return;
+        }
 
-        $this->redirect(route('home'), navigate: true);
+        DB::transaction(function () use ($invite): void {
+            $invite->lockForUpdate()->first();
+
+            if ($invite->isExhausted()) {
+                $this->addError('inviteCode', 'Codice invito esaurito.');
+
+                return;
+            }
+
+            $invite->increment('uses_count');
+
+            $user = User::create([
+                'name' => $this->name,
+                'password' => Hash::make($this->password),
+            ]);
+
+            event(new Registered($user));
+
+            Auth::login($user);
+        });
+
+        if (Auth::check()) {
+            $this->redirect(route('home'), navigate: true);
+        }
     }
 
     public function render()

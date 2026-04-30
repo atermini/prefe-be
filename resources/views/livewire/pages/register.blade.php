@@ -1,11 +1,21 @@
 <div class="max-w-md mx-auto">
     <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-white">Crea un account</h1>
-        <p class="mt-2 text-neutral-400">Rispondi alla domanda di oggi</p>
+        <p class="mt-2 text-neutral-400">Ti serve un codice invito per registrarti</p>
     </div>
 
     <div class="bg-neutral-900 rounded-2xl border border-neutral-800 p-8">
         <form wire:submit="register" class="space-y-5">
+            <div>
+                <label for="inviteCode" class="block text-sm font-medium text-neutral-300 mb-1.5">Codice invito</label>
+                <input type="text" id="inviteCode" wire:model="inviteCode"
+                       placeholder="XXXX-XXXX"
+                       class="w-full rounded-xl bg-neutral-800 border border-neutral-700 px-4 py-2.5 text-white placeholder-neutral-500 uppercase tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent @error('inviteCode') border-red-500 @enderror">
+                @error('inviteCode')
+                    <p class="mt-1.5 text-sm text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div>
                 <label for="name" class="block text-sm font-medium text-neutral-300 mb-1.5">Username</label>
                 <input type="text" id="name" wire:model="name" autocomplete="username"
