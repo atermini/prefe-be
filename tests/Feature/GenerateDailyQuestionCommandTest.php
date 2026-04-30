@@ -37,20 +37,30 @@ test('the daily question command generates a question and notifies all users', f
     );
 });
 
-test('the daily question command does not create duplicates for the same day', function () {
+test('the daily question command always creates a new question even if one exists for the same day', function () {
+    User::factory()->count(2)->create();
+
     Question::factory()->create([
         'active_on' => '2026-05-01',
     ]);
 
-    DailyWouldYouRatherAgent::fake()->preventStrayPrompts();
+    DailyWouldYouRatherAgent::fake([
+        [
+            'option_a' => 'dover brindare con il succo ACE a ogni discorso serio',
+            'option_b' => 'sentire soltanto applausi lenti ogni volta che entri in una stanza',
+        ],
+    ]);
+
     Notification::fake();
 
     $this->artisan('questions:generate-daily', [
         '--date' => '2026-05-01',
     ])->assertSuccessful();
 
-    expect(Question::query()->count())->toBe(1);
+    expect(Question::query()->count())->toBe(2);
 
-    Notification::assertNothingSent();
-    DailyWouldYouRatherAgent::assertNeverPrompted();
+    Notification::assertSentTo(
+        User::query()->get(),
+        DailyQuestionPublishedNotification::class,
+    );
 });

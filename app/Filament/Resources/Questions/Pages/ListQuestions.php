@@ -27,7 +27,7 @@ class ListQuestions extends ListRecords
                 ->modalSubmitActionLabel('Genera')
                 ->action(function (): void {
                     try {
-                        (new GenerateDailyQuestion)->handle(force: true);
+                        (new GenerateDailyQuestion)->handle();
 
                         Notification::make()
                             ->title('Domanda generata con successo')

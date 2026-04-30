@@ -1,16 +1,9 @@
 <div class="max-w-xl mx-auto">
 
-    @if (!$question)
-        <div class="text-center py-16">
-            <div class="text-6xl mb-4">🌙</div>
-            <h2 class="text-xl font-semibold text-neutral-300">Nessuna domanda per oggi</h2>
-            <p class="mt-2 text-neutral-500">Torna domani per una nuova sfida.</p>
-        </div>
-
-    @elseif (!$userAnswer)
-        {{-- Deve ancora rispondere --}}
+    @if ($question && !$userAnswer)
+        {{-- Domanda senza risposta --}}
         <div class="text-center mb-8">
-            <p class="text-sm font-medium text-violet-400 uppercase tracking-wider mb-2">Domanda di oggi</p>
+            <p class="text-sm font-medium text-violet-400 uppercase tracking-wider mb-2">Preferiresti...</p>
             <h1 class="text-2xl font-bold text-white leading-snug">{{ $question->introText() }}</h1>
         </div>
 
@@ -55,11 +48,11 @@
             </button>
         </form>
 
-    @else
-        {{-- Ha risposto: statistiche + feed --}}
-        <div class="bg-neutral-900 rounded-2xl border border-neutral-800 p-6 space-y-4 mb-8">
+    @elseif ($question && $userAnswer)
+        {{-- Appena risposto: mostra statistiche --}}
+        <div class="bg-neutral-900 rounded-2xl border border-neutral-800 p-6 space-y-4 mb-6">
             <div class="text-center">
-                <p class="text-xs text-violet-400 uppercase tracking-wider mb-1">Domanda di oggi</p>
+                <p class="text-xs text-violet-400 uppercase tracking-wider mb-1">Preferiresti...</p>
                 <p class="text-sm text-neutral-300">{{ $question->introText() }}</p>
                 <p class="text-xs text-neutral-500 mt-1">
                     Hai scelto
@@ -96,7 +89,21 @@
             @endif
         </div>
 
-        {{-- Feed --}}
+        @if ($unansweredCount > 0)
+            <button wire:click="next"
+                    class="w-full bg-violet-600 text-white font-semibold py-3 rounded-xl hover:bg-violet-500 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-neutral-950">
+                <span wire:loading.remove wire:target="next">Prossima domanda ({{ $unansweredCount }})</span>
+                <span wire:loading wire:target="next">Caricamento...</span>
+            </button>
+        @else
+            <button wire:click="next"
+                    class="w-full bg-neutral-800 text-neutral-300 font-semibold py-3 rounded-xl hover:bg-neutral-700 transition-colors">
+                Vedi il feed
+            </button>
+        @endif
+
+    @else
+        {{-- Tutte le domande risposte: feed --}}
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-white">Feed</h2>
             <span class="text-sm text-neutral-500">{{ $feed?->count() ?? 0 }} risposte</span>
@@ -137,8 +144,9 @@
                 @endforeach
             </div>
         @else
-            <div class="text-center py-10">
-                <p class="text-neutral-500 text-sm">Ancora nessun'altra risposta condivisa.</p>
+            <div class="text-center py-16">
+                <div class="text-6xl mb-4">🤫</div>
+                <p class="text-neutral-500 text-sm">Ancora nessuna risposta condivisa.</p>
             </div>
         @endif
     @endif

@@ -9,7 +9,7 @@ use Throwable;
 
 class GenerateDailyQuestionCommand extends Command
 {
-    protected $signature = 'questions:generate-daily {--date=} {--force}';
+    protected $signature = 'questions:generate-daily {--date=}';
 
     protected $description = 'Generate the daily question using the xAI agent and notify all users.';
 
@@ -20,10 +20,7 @@ class GenerateDailyQuestionCommand extends Command
             : null;
 
         try {
-            $question = $generateDailyQuestion->handle(
-                date: $date,
-                force: (bool) $this->option('force'),
-            );
+            $question = $generateDailyQuestion->handle(date: $date);
         } catch (Throwable $throwable) {
             report($throwable);
 

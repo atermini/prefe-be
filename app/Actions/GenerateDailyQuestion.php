@@ -13,21 +13,13 @@ use InvalidArgumentException;
 
 class GenerateDailyQuestion
 {
-    public function handle(?CarbonImmutable $date = null, bool $force = false): Question
+    public function handle(?CarbonImmutable $date = null): Question
     {
         $targetDate = ($date ?? CarbonImmutable::today('Europe/Rome'))->startOfDay();
 
-        $existingQuestion = Question::query()
-            ->whereDate('active_on', $targetDate->toDateString())
-            ->first();
-
-        if ($existingQuestion !== null && ! $force) {
-            return $existingQuestion;
-        }
-
         $response = (new DailyWouldYouRatherAgent)->prompt(
             sprintf(
-                'Genera la domanda del giorno per la data %s. Deve sembrare perfetta per essere condivisa tra amici in un’app mobile.',
+                'Genera la domanda del giorno per la data %s. Deve sembrare perfetta per essere condivisa tra amici in un\'app mobile.',
                 $targetDate->toDateString(),
             ),
             provider: 'xai',
@@ -38,20 +30,11 @@ class GenerateDailyQuestion
             'option_b' => $response['option_b'],
         ]);
 
-        return DB::transaction(function () use ($existingQuestion, $force, $questionData, $targetDate): Question {
-            $question = $existingQuestion;
-
-            if ($question !== null && $force) {
-                $question->update([
-                    ...$questionData,
-                    'active_on' => $targetDate->toDateString(),
-                ]);
-            } else {
-                $question = Question::query()->create([
-                    ...$questionData,
-                    'active_on' => $targetDate->toDateString(),
-                ]);
-            }
+        return DB::transaction(function () use ($questionData, $targetDate): Question {
+            $question = Question::query()->create([
+                ...$questionData,
+                'active_on' => $targetDate->toDateString(),
+            ]);
 
             Notification::send(
                 User::query()->get(),

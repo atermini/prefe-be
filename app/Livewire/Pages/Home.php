@@ -21,16 +21,7 @@ class Home extends Component
 
     public function mount(): void
     {
-        $this->question = Question::query()
-            ->whereDate('active_on', today())
-            ->first();
-
-        if ($this->question) {
-            $this->userAnswer = Answer::query()
-                ->where('question_id', $this->question->id)
-                ->where('user_id', Auth::id())
-                ->first();
-        }
+        $this->loadNextUnanswered();
     }
 
     public function answer(): void
@@ -50,12 +41,35 @@ class Home extends Component
         ]);
     }
 
+    public function next(): void
+    {
+        $this->selectedOption = '';
+        $this->loadNextUnanswered();
+    }
+
+    private function loadNextUnanswered(): void
+    {
+        $answeredIds = Answer::query()
+            ->where('user_id', Auth::id())
+            ->pluck('question_id');
+
+        $this->question = Question::query()
+            ->whereDate('active_on', '<=', today())
+            ->whereNotIn('id', $answeredIds)
+            ->oldest('active_on')
+            ->oldest('id')
+            ->first();
+
+        $this->userAnswer = null;
+    }
+
     public function render()
     {
         $stats = null;
         $feed = null;
+        $unansweredCount = null;
 
-        if ($this->question && $this->userAnswer) {
+        if ($this->userAnswer) {
             $total = $this->question->answers()->count();
             $countA = $this->question->answers()->where('selected_option', 'A')->count();
             $countB = $this->question->answers()->where('selected_option', 'B')->count();
@@ -68,6 +82,17 @@ class Home extends Component
                 'pct_b' => $total > 0 ? (int) round($countB / $total * 100) : 0,
             ];
 
+            $answeredIds = Answer::query()
+                ->where('user_id', Auth::id())
+                ->pluck('question_id');
+
+            $unansweredCount = Question::query()
+                ->whereDate('active_on', '<=', today())
+                ->whereNotIn('id', $answeredIds)
+                ->count();
+        }
+
+        if ($this->question === null) {
             $feed = Answer::query()
                 ->with(['question', 'user'])
                 ->where('is_shared', true)
@@ -77,6 +102,6 @@ class Home extends Component
                 ->get();
         }
 
-        return view('livewire.pages.home', compact('stats', 'feed'));
+        return view('livewire.pages.home', compact('stats', 'feed', 'unansweredCount'));
     }
 }
