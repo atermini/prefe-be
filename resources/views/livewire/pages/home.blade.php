@@ -13,41 +13,44 @@
             @enderror
 
             <button type="button" wire:click="$set('selectedOption', 'A')"
-                    class="w-full text-left p-5 rounded-2xl border-2 transition-all
+                class="w-full text-left p-5 rounded-2xl border-2 transition-all
                            {{ $selectedOption === 'A'
                                ? 'border-violet-500 bg-violet-950'
                                : 'border-neutral-800 bg-neutral-900 hover:border-neutral-600' }}">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0
+                    <span
+                        class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0
                                  {{ $selectedOption === 'A' ? 'bg-violet-500 text-white' : 'bg-neutral-800 text-neutral-400' }}">
                         A
                     </span>
-                    <span class="font-medium {{ $selectedOption === 'A' ? 'text-white' : 'text-neutral-300' }}">{{ $question->option_a }}</span>
+                    <span
+                        class="font-medium {{ $selectedOption === 'A' ? 'text-white' : 'text-neutral-300' }}">{{ $question->option_a }}</span>
                 </div>
             </button>
 
             <button type="button" wire:click="$set('selectedOption', 'B')"
-                    class="w-full text-left p-5 rounded-2xl border-2 transition-all
+                class="w-full text-left p-5 rounded-2xl border-2 transition-all
                            {{ $selectedOption === 'B'
                                ? 'border-violet-500 bg-violet-950'
                                : 'border-neutral-800 bg-neutral-900 hover:border-neutral-600' }}">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0
+                    <span
+                        class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0
                                  {{ $selectedOption === 'B' ? 'bg-violet-500 text-white' : 'bg-neutral-800 text-neutral-400' }}">
                         B
                     </span>
-                    <span class="font-medium {{ $selectedOption === 'B' ? 'text-white' : 'text-neutral-300' }}">{{ $question->option_b }}</span>
+                    <span
+                        class="font-medium {{ $selectedOption === 'B' ? 'text-white' : 'text-neutral-300' }}">{{ $question->option_b }}</span>
                 </div>
             </button>
 
             <button type="submit"
-                    class="w-full bg-violet-600 text-white font-semibold py-3 rounded-xl hover:bg-violet-500 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-30 disabled:cursor-not-allowed"
-                    @if(!$selectedOption) disabled @endif>
+                class="w-full bg-violet-600 text-white font-semibold py-3 rounded-xl hover:bg-violet-500 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-30 disabled:cursor-not-allowed"
+                @if (!$selectedOption) disabled @endif>
                 <span wire:loading.remove>Rispondi</span>
                 <span wire:loading>Invio...</span>
             </button>
         </form>
-
     @elseif ($question && $userAnswer)
         {{-- Appena risposto: mostra statistiche --}}
         <div class="bg-neutral-900 rounded-2xl border border-neutral-800 p-6 space-y-4 mb-6">
@@ -71,7 +74,7 @@
                         </div>
                         <div class="h-2.5 bg-neutral-800 rounded-full overflow-hidden">
                             <div class="h-full rounded-full transition-all duration-700 {{ $userAnswer->selected_option === 'A' ? 'bg-violet-500' : 'bg-neutral-600' }}"
-                                 style="width: {{ $stats['pct_a'] }}%"></div>
+                                style="width: {{ $stats['pct_a'] }}%"></div>
                         </div>
                     </div>
                     <div>
@@ -81,41 +84,42 @@
                         </div>
                         <div class="h-2.5 bg-neutral-800 rounded-full overflow-hidden">
                             <div class="h-full rounded-full transition-all duration-700 {{ $userAnswer->selected_option === 'B' ? 'bg-violet-500' : 'bg-neutral-600' }}"
-                                 style="width: {{ $stats['pct_b'] }}%"></div>
+                                style="width: {{ $stats['pct_b'] }}%"></div>
                         </div>
                     </div>
                 </div>
-                <p class="text-center text-xs text-neutral-600">{{ $stats['total'] }} {{ $stats['total'] === 1 ? 'risposta' : 'risposte' }} totali</p>
+                <p class="text-center text-xs text-neutral-600">{{ $stats['total'] }}
+                    {{ $stats['total'] === 1 ? 'risposta' : 'risposte' }} totali</p>
             @endif
         </div>
 
         @if ($unansweredCount > 0)
             <button wire:click="next"
-                    class="w-full bg-violet-600 text-white font-semibold py-3 rounded-xl hover:bg-violet-500 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-neutral-950">
+                class="w-full bg-violet-600 text-white font-semibold py-3 rounded-xl hover:bg-violet-500 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-neutral-950">
                 <span wire:loading.remove wire:target="next">Prossima domanda ({{ $unansweredCount }})</span>
                 <span wire:loading wire:target="next">Caricamento...</span>
             </button>
         @else
             <button wire:click="next"
-                    class="w-full bg-neutral-800 text-neutral-300 font-semibold py-3 rounded-xl hover:bg-neutral-700 transition-colors">
+                class="w-full bg-neutral-800 text-neutral-300 font-semibold py-3 rounded-xl hover:bg-neutral-700 transition-colors">
                 Vedi il feed
             </button>
         @endif
-
     @else
         {{-- Tutte le domande risposte: feed --}}
 
         {{-- Pulsante genera domanda --}}
         <div class="mb-6">
             @if ($hasGeneratedToday)
-                <div class="w-full bg-neutral-900 border border-neutral-800 text-neutral-500 font-semibold py-3 rounded-xl text-center text-sm">
+                <div
+                    class="w-full bg-neutral-900 border border-neutral-800 text-neutral-500 font-semibold py-3 rounded-xl text-center text-sm">
                     Hai già generato una domanda oggi
                 </div>
             @else
                 <button wire:click="generateQuestion"
-                        class="w-full bg-violet-600 text-white font-semibold py-3 rounded-xl hover:bg-violet-500 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-neutral-950">
+                    class="w-full bg-violet-600 text-white font-semibold py-3 rounded-xl hover:bg-violet-500 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-neutral-950">
                     <span wire:loading.remove wire:target="generateQuestion">✦ Genera una domanda</span>
-                    <span wire:loading wire:target="generateQuestion">L'agente sta pensando...</span>
+                    <span wire:loading wire:target="generateQuestion">Manolo sta pensando...</span>
                 </button>
             @endif
         </div>
@@ -145,9 +149,11 @@
                             <div class="space-y-1.5">
                                 <p class="text-xs text-neutral-500 mb-2">{{ $answer->question->introText() }}</p>
                                 @foreach (['A' => $answer->question->option_a, 'B' => $answer->question->option_b] as $opt => $label)
-                                    <div class="flex items-center gap-2 text-sm
+                                    <div
+                                        class="flex items-center gap-2 text-sm
                                                 {{ $answer->selected_option === $opt ? 'font-semibold text-violet-400' : 'text-neutral-600' }}">
-                                        <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0
+                                        <span
+                                            class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0
                                                      {{ $answer->selected_option === $opt ? 'bg-violet-600 text-white' : 'bg-neutral-800 text-neutral-600' }}">
                                             {{ $opt }}
                                         </span>
