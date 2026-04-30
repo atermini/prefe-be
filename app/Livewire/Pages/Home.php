@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Pages;
 
+use App\Actions\GenerateDailyQuestion;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Throwable;
 
 #[Layout('components.layouts.app')]
 class Home extends Component
@@ -47,20 +49,18 @@ class Home extends Component
         $this->loadNextUnanswered();
     }
 
-    private function loadNextUnanswered(): void
+    public function generateQuestion(): void
     {
-        $answeredIds = Answer::query()
-            ->where('user_id', Auth::id())
-            ->pluck('question_id');
+        if ($this->hasGeneratedToday()) {
+            return;
+        }
 
-        $this->question = Question::query()
-            ->whereDate('active_on', '<=', today())
-            ->whereNotIn('id', $answeredIds)
-            ->oldest('active_on')
-            ->oldest('id')
-            ->first();
-
-        $this->userAnswer = null;
+        try {
+            (new GenerateDailyQuestion)->handle(createdBy: Auth::user());
+            $this->loadNextUnanswered();
+        } catch (Throwable) {
+            // errore silenzioso — l'agente AI potrebbe fallire
+        }
     }
 
     public function render()
@@ -68,6 +68,7 @@ class Home extends Component
         $stats = null;
         $feed = null;
         $unansweredCount = null;
+        $hasGeneratedToday = false;
 
         if ($this->userAnswer) {
             $total = $this->question->answers()->count();
@@ -93,6 +94,8 @@ class Home extends Component
         }
 
         if ($this->question === null) {
+            $hasGeneratedToday = $this->hasGeneratedToday();
+
             $feed = Answer::query()
                 ->with(['question', 'user'])
                 ->where('is_shared', true)
@@ -102,6 +105,30 @@ class Home extends Component
                 ->get();
         }
 
-        return view('livewire.pages.home', compact('stats', 'feed', 'unansweredCount'));
+        return view('livewire.pages.home', compact('stats', 'feed', 'unansweredCount', 'hasGeneratedToday'));
+    }
+
+    private function hasGeneratedToday(): bool
+    {
+        return Question::query()
+            ->where('user_id', Auth::id())
+            ->whereDate('active_on', today())
+            ->exists();
+    }
+
+    private function loadNextUnanswered(): void
+    {
+        $answeredIds = Answer::query()
+            ->where('user_id', Auth::id())
+            ->pluck('question_id');
+
+        $this->question = Question::query()
+            ->whereDate('active_on', '<=', today())
+            ->whereNotIn('id', $answeredIds)
+            ->oldest('active_on')
+            ->oldest('id')
+            ->first();
+
+        $this->userAnswer = null;
     }
 }

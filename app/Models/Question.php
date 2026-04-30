@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['option_a', 'option_b', 'active_on'])]
+#[Fillable(['user_id', 'option_a', 'option_b', 'active_on'])]
 class Question extends Model
 {
     /** @use HasFactory<QuestionFactory> */
@@ -18,6 +19,11 @@ class Question extends Model
     public static function introText(): string
     {
         return 'Preferiresti...';
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function answers(): HasMany

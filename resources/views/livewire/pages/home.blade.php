@@ -104,6 +104,22 @@
 
     @else
         {{-- Tutte le domande risposte: feed --}}
+
+        {{-- Pulsante genera domanda --}}
+        <div class="mb-6">
+            @if ($hasGeneratedToday)
+                <div class="w-full bg-neutral-900 border border-neutral-800 text-neutral-500 font-semibold py-3 rounded-xl text-center text-sm">
+                    Hai già generato una domanda oggi
+                </div>
+            @else
+                <button wire:click="generateQuestion"
+                        class="w-full bg-violet-600 text-white font-semibold py-3 rounded-xl hover:bg-violet-500 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-neutral-950">
+                    <span wire:loading.remove wire:target="generateQuestion">✦ Genera una domanda</span>
+                    <span wire:loading wire:target="generateQuestion">L'agente sta pensando...</span>
+                </button>
+            @endif
+        </div>
+
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-white">Feed</h2>
             <span class="text-sm text-neutral-500">{{ $feed?->count() ?? 0 }} risposte</span>

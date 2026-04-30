@@ -13,7 +13,7 @@ use InvalidArgumentException;
 
 class GenerateDailyQuestion
 {
-    public function handle(?CarbonImmutable $date = null): Question
+    public function handle(?CarbonImmutable $date = null, ?User $createdBy = null): Question
     {
         $targetDate = ($date ?? CarbonImmutable::today('Europe/Rome'))->startOfDay();
 
@@ -30,10 +30,11 @@ class GenerateDailyQuestion
             'option_b' => $response['option_b'],
         ]);
 
-        return DB::transaction(function () use ($questionData, $targetDate): Question {
+        return DB::transaction(function () use ($questionData, $targetDate, $createdBy): Question {
             $question = Question::query()->create([
                 ...$questionData,
                 'active_on' => $targetDate->toDateString(),
+                'user_id' => $createdBy?->id,
             ]);
 
             Notification::send(
