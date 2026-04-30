@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\FeedAnswerResource;
 use App\Models\Answer;
 use App\Models\Friendship;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FeedController extends Controller
 {

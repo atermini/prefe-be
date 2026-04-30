@@ -16,7 +16,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->when(
-                $request->user()?->id === $this->id,
+                $request->user() === null || $request->user()?->id === $this->id,
                 $this->email,
             ),
         ];
