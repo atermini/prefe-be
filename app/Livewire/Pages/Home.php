@@ -10,7 +10,7 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('components.layouts.app')]
-class TodayQuestion extends Component
+class Home extends Component
 {
     public ?Question $question = null;
 
@@ -53,6 +53,7 @@ class TodayQuestion extends Component
     public function render()
     {
         $stats = null;
+        $feed = null;
 
         if ($this->question && $this->userAnswer) {
             $total = $this->question->answers()->count();
@@ -66,8 +67,16 @@ class TodayQuestion extends Component
                 'pct_a' => $total > 0 ? (int) round($countA / $total * 100) : 0,
                 'pct_b' => $total > 0 ? (int) round($countB / $total * 100) : 0,
             ];
+
+            $feed = Answer::query()
+                ->with(['question', 'user'])
+                ->where('is_shared', true)
+                ->latest('answered_at')
+                ->latest('id')
+                ->limit(50)
+                ->get();
         }
 
-        return view('livewire.pages.today-question', compact('stats'));
+        return view('livewire.pages.home', compact('stats', 'feed'));
     }
 }

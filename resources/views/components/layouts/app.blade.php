@@ -11,19 +11,11 @@
 
     <header class="bg-neutral-900 border-b border-neutral-800">
         <div class="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
-            <a href="{{ route('question') }}" wire:navigate class="text-xl font-bold text-violet-400 tracking-tight">
+            <a href="{{ route('home') }}" wire:navigate class="text-xl font-bold text-violet-400 tracking-tight">
                 prefe
             </a>
             <nav class="flex items-center gap-3">
                 @auth
-                    <a href="{{ route('question') }}" wire:navigate
-                       class="text-sm text-neutral-400 hover:text-white transition-colors data-[current]:font-semibold data-[current]:text-violet-400">
-                        Domanda
-                    </a>
-                    <a href="{{ route('feed') }}" wire:navigate
-                       class="text-sm text-neutral-400 hover:text-white transition-colors data-[current]:font-semibold data-[current]:text-violet-400">
-                        Feed
-                    </a>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit"
