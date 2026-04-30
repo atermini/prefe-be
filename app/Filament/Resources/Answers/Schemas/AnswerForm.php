@@ -4,9 +4,9 @@ namespace App\Filament\Resources\Answers\Schemas;
 
 use App\Models\Question;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class AnswerForm

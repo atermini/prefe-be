@@ -5,8 +5,8 @@ namespace App\Filament\Resources\Questions\Schemas;
 use App\Models\Question;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class QuestionForm
