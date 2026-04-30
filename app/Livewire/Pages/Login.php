@@ -30,7 +30,7 @@ class Login extends Component
 
         session()->regenerate();
 
-        $this->redirect(route('question'), navigate: true);
+        $this->redirect(route('home'), navigate: true);
     }
 
     public function render()
