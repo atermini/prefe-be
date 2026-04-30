@@ -10,8 +10,8 @@ use Livewire\Component;
 #[Layout('components.layouts.app')]
 class Login extends Component
 {
-    #[Validate('required|email')]
-    public string $email = '';
+    #[Validate('required|string|max:255')]
+    public string $username = '';
 
     #[Validate('required')]
     public string $password = '';
@@ -22,8 +22,8 @@ class Login extends Component
     {
         $this->validate();
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            $this->addError('email', 'Le credenziali non sono corrette.');
+        if (! Auth::attempt(['name' => $this->username, 'password' => $this->password], $this->remember)) {
+            $this->addError('username', 'Le credenziali non sono corrette.');
 
             return;
         }

@@ -13,11 +13,8 @@ use Livewire\Component;
 #[Layout('components.layouts.app')]
 class Register extends Component
 {
-    #[Validate('required|string|max:255')]
+    #[Validate('required|string|max:255|unique:users,name')]
     public string $name = '';
-
-    #[Validate('required|email|max:255|unique:users,email')]
-    public string $email = '';
 
     #[Validate('required|string|min:8|confirmed')]
     public string $password = '';
@@ -30,7 +27,6 @@ class Register extends Component
 
         $user = User::create([
             'name' => $this->name,
-            'email' => $this->email,
             'password' => Hash::make($this->password),
         ]);
 

@@ -8,7 +8,6 @@ uses(RefreshDatabase::class);
 test('a user can register and receive an api token', function () {
     $response = $this->postJson('/api/auth/register', [
         'name' => 'Andrea',
-        'email' => 'andrea@example.com',
         'password' => 'password123',
         'password_confirmation' => 'password123',
         'device_name' => 'iPhone 16',
@@ -16,11 +15,10 @@ test('a user can register and receive an api token', function () {
 
     $response
         ->assertCreated()
-        ->assertJsonPath('user.name', 'Andrea')
-        ->assertJsonPath('user.email', 'andrea@example.com');
+        ->assertJsonPath('user.name', 'Andrea');
 
     expect($response->json('token'))->not->toBeEmpty();
-    expect(User::query()->where('email', 'andrea@example.com')->exists())->toBeTrue();
+    expect(User::query()->where('name', 'Andrea')->exists())->toBeTrue();
 });
 
 test('an authenticated user can fetch their profile', function () {
@@ -31,5 +29,5 @@ test('an authenticated user can fetch their profile', function () {
         ->getJson('/api/me')
         ->assertSuccessful()
         ->assertJsonPath('data.id', $user->id)
-        ->assertJsonPath('data.email', $user->email);
+        ->assertJsonPath('data.name', $user->name);
 });

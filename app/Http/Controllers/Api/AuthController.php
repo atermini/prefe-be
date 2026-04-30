@@ -18,7 +18,6 @@ class AuthController extends Controller
     {
         $user = User::query()->create($request->safe()->only([
             'name',
-            'email',
             'password',
         ]));
 
@@ -34,12 +33,12 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         $user = User::query()
-            ->where('email', $request->string('email')->toString())
+            ->where('name', $request->string('username')->toString())
             ->first();
 
         if ($user === null || ! Hash::check($request->string('password')->toString(), $user->password)) {
             throw ValidationException::withMessages([
-                'email' => __('The provided credentials are incorrect.'),
+                'username' => __('The provided credentials are incorrect.'),
             ]);
         }
 
