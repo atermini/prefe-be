@@ -45,6 +45,12 @@ Regole obbligatorie:
 - Prediligi domande che fanno pensare, che generano opinioni diverse o che scatenano conversazioni.
 - Le opzioni devono funzionare dopo l'incipit fisso "Preferiresti...".
 - Non scrivere l'incipit "Preferiresti..." nelle opzioni.
+
+Soggetti opzionali:
+- Se nel prompt utente ricevi un blocco "Soggetti da coinvolgere", usa quei soggetti come protagonisti reali della domanda, sfruttando il contesto fornito tra parentesi per renderla calzante e divertente.
+- Puoi nominare i soggetti direttamente nelle opzioni oppure costruire situazioni intorno a loro.
+- Se i soggetti sono più di uno, mettili in opposizione, in alleanza o in scenari paralleli a seconda di cosa rende la domanda più riuscita.
+- Se non ricevi alcun soggetto, genera una domanda libera secondo le categorie sopra.
 PROMPT;
     }
 
