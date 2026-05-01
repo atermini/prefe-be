@@ -25,14 +25,15 @@ class UserForm
                             ->email()
                             ->required()
                             ->unique(ignoreRecord: true),
-                        DateTimePicker::make('email_verified_at'),
+                        DateTimePicker::make('email_verified_at')
+                            ->visibleOn('create'),
                         Toggle::make('is_admin')
                             ->label('Può accedere al pannello admin'),
                         TextInput::make('password')
                             ->password()
                             ->revealable()
-                            ->required(fn (string $operation): bool => $operation === 'create')
-                            ->dehydrated(fn (?string $state): bool => filled($state)),
+                            ->required()
+                            ->visibleOn('create'),
                     ])
                     ->columns(2),
             ]);
