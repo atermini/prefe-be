@@ -23,7 +23,7 @@ class UserForm
                         TextInput::make('email')
                             ->label('Email address')
                             ->email()
-                            ->required()
+                            ->required(fn (string $operation): bool => $operation === 'create')
                             ->unique(ignoreRecord: true),
                         DateTimePicker::make('email_verified_at')
                             ->visibleOn('create'),
